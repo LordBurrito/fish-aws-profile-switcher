@@ -1,19 +1,32 @@
 function __awsprofile_list_profiles
-  cat ~/.aws/config | grep profile | cut -d " " -f 2 | cut -d "]" -f 1
+  if test -f $HOME/.aws/config
+    awk '/^\[profile /{gsub(/^\[profile |\]$/,""); print}' $HOME/.aws/config
+  else
+    echo "AWS config not found at $HOME/.aws/config"
+  end
 end
 
 function awsprofile \
-  --description 'Switch active AWS profile' \
+  --description "Switch active AWS profile" \
   --argument-names profile_name
-  
-  if test -z $profile_name
-    if command -q fzf
+  if test -z "$profile_name"
+    if command -v fzf > /dev/null
       set profile_name (__awsprofile_list_profiles | fzf --header "Select AWS profile")
     else
-      echo "Available profiles:"
-      __awsprofile_list_profiles
+      set profile_name (__awsprofile_list_profiles)
     end
   end
 
-  set -Ux AWS_PROFILE $profile_name
+  if test -z "$profile_name"
+    echo "No profile selected or provided."
+    return 1
+  end
+
+  if not __awsprofile_list_profiles | grep -qx "$profile_name"
+    echo "Profile '$profile_name' not found in AWS config."
+    return 1
+  end
+
+  set -Ux AWS_PROFILE "$profile_name"
+  echo "Switched to AWS profile: $profile_name"
 end
