@@ -16,7 +16,7 @@ awsprofile <profile_name>
 ## Installation
 
 ```sh
-fisher install anakaiti/fish-aws-profile-switcher
+fisher install LordBurrito/fish-aws-profile-switcher
 ```
 
 ## License
