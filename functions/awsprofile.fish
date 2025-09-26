@@ -6,6 +6,7 @@ function __awsprofile_list_profiles
     ' "$HOME/.aws/config"
   else
     echo "AWS config not found at $HOME/.aws/config" >&2
+    return 2
   end
 end
 
