@@ -1,6 +1,4 @@
-complete \
-  --command awsprofile \
-  --exclusive 
+complete --command awsprofile --no-files -f -a "'--clean --list'" -d 'Options'
 
 complete \
   --command awsprofile \
