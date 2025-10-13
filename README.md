@@ -10,7 +10,7 @@ Optimized for use with [fzf](https://github.com/junegunn/fzf).
 - **Interactive selection**: Interactive profile selection using fzf, if installed.
 - **Direct selection**: You can specify the profile name directly as an argument.
 - **Clear profile**: Clear profile with `awsprofile --clean` or `awsprofile clean`.
-- **List subcommand and flag**: List profiles with `awsprofile list` or `awsprofile --list`.
+- **List subcommand**: List profiles with `awsprofile --list` or `awsprofile list`.
 - **Error handling**: Warns if the profile does not exist or if the AWS config file is missing.
 - **Shell completion**: Fish shell completions for profiles and flags.
 
@@ -26,13 +26,7 @@ awsprofile <profile_name>
 # Clear AWS_PROFILE
 awsprofile --clean
 
-# Or
-awsprofile clean
-
 # Print available profiles
-awsprofile list
-
-# Or
 awsprofile --list
 ```
 
