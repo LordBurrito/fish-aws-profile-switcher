@@ -9,33 +9,28 @@ function __awsprofile_list_profiles
 end
 
 function awsprofile --description "Switch active AWS profile"
-    set -l doclean 0
-    set -l dolist 0
-    set -l profilename
-    # Parse flags
-    for token in $argv
-        switch $token
-            case '--clean'
-                set doclean 1
-                set argv (string match -v -- "--clean" $argv)
-            case '--list'
-                set dolist 1
-                set argv (string match -v -- "--list" $argv)
-        end
-    end
-    # First positional argument is profile name
-    if test (count $argv) -ge 1
-        set profilename $argv[1]
-    end
-    if test $doclean -eq 1 -o "$profilename" = "clean"
+    set -l profilename ""
+    
+    # Parse positional argument and flags
+    argparse --ignore-unknown 'c/clean' 'l/list' -- $argv
+    or return 1
+    
+    if set -q _flag_clean
         set -e AWS_PROFILE
         echo "Cleared AWS_PROFILE environment variable."
         return 0
     end
-    if test $dolist -eq 1 -o "$profilename" = "list"
+    
+    if set -q _flag_list
         __awsprofile_list_profiles
         return 0
     end
+    
+    # Get profile name from remaining arguments
+    if test (count $argv) -ge 1
+        set profilename $argv[1]
+    end
+    
     if test -z "$profilename"
         if type -q fzf
             set profilename (__awsprofile_list_profiles | fzf --header="Select AWS profile")
@@ -50,10 +45,12 @@ function awsprofile --description "Switch active AWS profile"
             return 0
         end
     end
+    
     if not __awsprofile_list_profiles | grep -qx -- "$profilename"
         echo "Profile '$profilename' not found in AWS config." >&2
         return 2
     end
+    
     set -Ux AWS_PROFILE $profilename
     echo "Switched to AWS profile: $profilename"
 end
