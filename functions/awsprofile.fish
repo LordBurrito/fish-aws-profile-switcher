@@ -30,7 +30,7 @@ function awsprofile --description "Switch active AWS profile"
     set -l profilename ""
 
     # Parse positional argument and flags
-    argparse --ignore-unknown 'c/clean' 'l/list' 'h/help' 'v/version' -- $argv
+    argparse 'c/clean' 'l/list' 'h/help' 'v/version' -- $argv
     or return 1
 
     if set -q _flag_help
@@ -51,7 +51,7 @@ function awsprofile --description "Switch active AWS profile"
 
     if set -q _flag_list
         __awsprofile_list_profiles
-        return 0
+        return $status
     end
 
     # Cache profiles list to avoid multiple calls
