@@ -2,4 +2,4 @@ complete --command awsprofile --no-files --short-opt c --long-opt clean --descri
 complete --command awsprofile --no-files --short-opt l --long-opt list --description "List available profiles"
 complete --command awsprofile --no-files --short-opt h --long-opt help --description "Show help message"
 complete --command awsprofile --no-files --short-opt v --long-opt version --description "Show version information"
-complete --command awsprofile --condition '__fish_use_subcommand' --arguments "(__awsprofile_list_profiles)" --description "AWS profile"
+complete --command awsprofile --no-files --arguments "(__awsprofile_list_profiles)" --description "AWS profile"
