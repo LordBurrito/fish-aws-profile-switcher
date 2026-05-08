@@ -1,5 +1,6 @@
 complete --command awsprofile --no-files --short-opt c --long-opt clean --description "Clear AWS_PROFILE environment variable"
 complete --command awsprofile --no-files --short-opt l --long-opt list --description "List available profiles"
+complete --command awsprofile --no-files --short-opt u --long-opt universal --description "Set AWS_PROFILE as universal variable (persists across sessions)"
 complete --command awsprofile --no-files --short-opt h --long-opt help --description "Show help message"
 complete --command awsprofile --no-files --short-opt v --long-opt version --description "Show version information"
 complete --command awsprofile --no-files --arguments "(__awsprofile_list_profiles)" --description "AWS profile"

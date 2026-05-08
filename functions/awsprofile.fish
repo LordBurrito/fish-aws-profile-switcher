@@ -16,12 +16,14 @@ function __awsprofile_show_help
     echo "Options:"
     echo "  -c, --clean       Clear AWS_PROFILE environment variable"
     echo "  -l, --list        List available AWS profiles"
+    echo "  -u, --universal   Set AWS_PROFILE as a universal variable (persists across sessions)"
     echo "  -h, --help        Show this help message"
     echo "  -v, --version     Show version information"
     echo ""
     echo "Examples:"
     echo "  awsprofile              # Interactive selection with fzf"
     echo "  awsprofile production   # Switch to 'production' profile"
+    echo "  awsprofile -u production # Switch and persist across sessions"
     echo "  awsprofile --clean      # Clear AWS_PROFILE"
     echo "  awsprofile --list       # List all profiles"
 end
@@ -30,7 +32,7 @@ function awsprofile --description "Switch active AWS profile"
     set -l profilename ""
 
     # Parse positional argument and flags
-    argparse 'c/clean' 'l/list' 'h/help' 'v/version' -- $argv
+    argparse 'c/clean' 'l/list' 'u/universal' 'h/help' 'v/version' -- $argv
     or return 1
 
     if set -q _flag_help
@@ -83,6 +85,11 @@ function awsprofile --description "Switch active AWS profile"
         return 2
     end
 
-    set -gx AWS_PROFILE "$profilename"
-    echo "Switched to AWS profile: $profilename" >&2
+    if set -q _flag_universal
+        set -Ux AWS_PROFILE "$profilename"
+        echo "Switched to AWS profile: $profilename (universal)" >&2
+    else
+        set -gx AWS_PROFILE "$profilename"
+        echo "Switched to AWS profile: $profilename" >&2
+    end
 end
