@@ -107,6 +107,23 @@ run 'set -Ux AWS_PROFILE mine; emit awsprofile_uninstall; echo $AWS_PROFILE'
 check "uninstall keeps universal set by user" test "$out" = mine
 teardown
 
+# A global AWS_PROFILE shadows the universal one, so both scopes must be handled
+setup; write_config
+run 'awsprofile crlf; awsprofile -u trailing; echo $AWS_PROFILE; set -qg AWS_PROFILE; echo $status'
+check "universal switch replaces existing global" test "$out" = "trailing 1"
+check "universal switch does not warn about shadowing" test -z (string match '*shadows*' -- $err)
+run 'echo $AWS_PROFILE'
+check "universal value visible in new session" test "$out" = trailing
+run 'awsprofile crlf; awsprofile -c; echo "[$AWS_PROFILE]"'
+check "single clean removes global and universal" test "$out" = "[]"
+run 'echo "[$AWS_PROFILE]"'
+check "clean removed universal for new sessions" test "$out" = "[]"
+run 'awsprofile -u trailing; awsprofile crlf; echo $AWS_PROFILE'
+check "plain switch overrides universal in this session" test "$out" = crlf
+run 'echo $AWS_PROFILE'
+check "plain switch leaves universal for other sessions" test "$out" = trailing
+teardown
+
 # --- completions ---
 setup; write_config
 run "complete -C 'awsprofile ' | string replace -r '\t.*' ''"

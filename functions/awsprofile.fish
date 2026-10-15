@@ -47,7 +47,9 @@ function awsprofile --description "Switch active AWS profile"
     end
 
     if set -q _flag_clean
-        set -e AWS_PROFILE
+        # A global shadows a universal of the same name, so both scopes must be erased
+        set -e -g AWS_PROFILE
+        set -e -U AWS_PROFILE
         set -e -U __awsprofile_set_universal
         echo "Cleared AWS_PROFILE environment variable." >&2
         return 0
@@ -89,6 +91,8 @@ function awsprofile --description "Switch active AWS profile"
     end
 
     if set -q _flag_universal
+        # Drop any global first, otherwise it would shadow the new universal value
+        set -e -g AWS_PROFILE
         set -Ux AWS_PROFILE "$profilename"
         # Remembered so the uninstall hook only removes a universal variable we created
         set -U __awsprofile_set_universal 1

@@ -62,7 +62,7 @@ $ awsprofile -u production
 Switched to AWS profile: production (universal)
 ```
 
-`awsprofile --clean` removes it again. If you uninstall the plugin with Fisher, a universal `AWS_PROFILE` set by `awsprofile -u` is removed as well.
+A plain `awsprofile NAME` afterwards overrides it in the current shell only; other sessions keep the universal profile. `awsprofile --clean` removes both. If you uninstall the plugin with Fisher, a universal `AWS_PROFILE` set by `awsprofile -u` is removed as well.
 
 ### List available profiles
 
