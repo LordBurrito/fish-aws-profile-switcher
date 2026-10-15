@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install fish
+        run: |
+          sudo apt-add-repository -y ppa:fish-shell/release-3
+          sudo apt-get update
+          sudo apt-get install -y fish
+      - name: Syntax check
+        run: for f in functions/*.fish completions/*.fish conf.d/*.fish tests/*.fish; do fish --no-execute $f; done
+      - name: Run tests
+        run: fish tests/awsprofile.fish
